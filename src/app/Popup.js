@@ -1,58 +1,63 @@
 define([
-    'dojo/_base/declare', 
-    'dijit/_WidgetBase', 
-    'dijit/_TemplatedMixin', 
-    'dijit/_WidgetsInTemplateMixin',
-    'dojo/text!app/templates/Popup.html',
-    'dojox/charting/Chart',
-    'dojox/charting/themes/PlotKit/orange',
-    'dojox/charting/plot2d/Areas',
-    'esri/request',
-    'dojo/_base/array',
-    'dojo/_base/lang',
-    'dojo/on',
-    'dojo/dom-class',
-    'esri/domUtils',
-    'dojo/_base/fx',
-    'dojo/fx',
-    'dojo/dom-geometry',
-    'dojo/_base/window',
-    'dojo/dom-style',
-    'esri/tasks/GeometryService',
-    'esri/tasks/AreasAndLengthsParameters',
     'agrc/modules/Formatting',
 
-    'dojox/charting/axis2d/Default'
-],
+    'dijit/_TemplatedMixin',
+    'dijit/_WidgetBase',
+    'dijit/_WidgetsInTemplateMixin',
 
-function (
-    declare, 
-    _WidgetBase, 
-    _TemplatedMixin, 
-    _WidgetsInTemplateMixin, 
-    template,
-    Chart,
-    theme,
-    Areas,
-    esriRequest,
-    array,
-    lang,
-    on,
+    'dojo/dom-class',
+    'dojo/dom-geometry',
+    'dojo/dom-style',
+    'dojo/fx',
+    'dojo/on',
+    'dojo/text!app/templates/Popup.html',
+    'dojo/_base/array',
+    'dojo/_base/declare',
+    'dojo/_base/fx',
+    'dojo/_base/lang',
+    'dojo/_base/window',
+
+    'dojox/charting/Chart',
+    'dojox/charting/plot2d/Areas',
+    'dojox/charting/themes/PlotKit/orange',
+
+    'esri/domUtils',
+    'esri/request',
+    'esri/tasks/AreasAndLengthsParameters',
+    'esri/tasks/GeometryService',
+
+    'dojox/charting/axis2d/Default'
+], function (
+    Formatting,
+
+    _TemplatedMixin,
+    _WidgetBase,
+    _WidgetsInTemplateMixin,
+
     domClass,
-    domUtils,
-    fx,
-    coreFx,
     domGeom,
-    win,
     domStyle,
-    GeometryService,
+    coreFx,
+    on,
+    template,
+    array,
+    declare,
+    fx,
+    lang,
+    win,
+
+    Chart,
+    Areas,
+    theme,
+
+    domUtils,
+    esriRequest,
     AreasAndLengthsParameters,
-    Formatting
-    ) {
+    GeometryService
+) {
     // summary:
     //      Handles retrieving and displaying the data in the popup.
-    return declare(
-        [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+    return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         widgetsInTemplate: true,
         templateString: template,
         baseClass: 'popup-widget',
@@ -89,17 +94,17 @@ function (
 
 
         constructor: function () {
-            console.log(this.declaredClass + "::constructor", arguments);
+            console.log(this.declaredClass + '::constructor', arguments);
         },
         postCreate: function () {
             // summary:
             //      dom is ready
-            console.log(this.declaredClass + "::postCreate", arguments);
+            console.log(this.declaredClass + '::postCreate', arguments);
 
             this.chart = new Chart(this.chartDiv)
                 .addPlot('default', {
                     type: Areas,
-                    tension: "S",
+                    tension: 'S',
                     hAxis: 'months',
                     vAxis: 'values'
                 })
@@ -107,16 +112,16 @@ function (
                     labels: [
                         {value: 1, text: 'Jan'},
                         {value: 2, text: 'Feb'},
-                        {value: 3, text: "Mar"}, 
-                        {value: 4, text: "Apr"},
-                        {value: 5, text: "May"}, 
-                        {value: 6, text: "Jun"},
-                        {value: 7, text: "Jul"}, 
-                        {value: 8, text: "Aug"},
-                        {value: 9, text: "Sep"}, 
-                        {value: 10, text: "Oct"},
-                        {value: 11, text: "Nov"}, 
-                        {value: 12, text: "Dec"}
+                        {value: 3, text: 'Mar'},
+                        {value: 4, text: 'Apr'},
+                        {value: 5, text: 'May'},
+                        {value: 6, text: 'Jun'},
+                        {value: 7, text: 'Jul'},
+                        {value: 8, text: 'Aug'},
+                        {value: 9, text: 'Sep'},
+                        {value: 10, text: 'Oct'},
+                        {value: 11, text: 'Nov'},
+                        {value: 12, text: 'Dec'}
                     ],
                     majorTick: {length: 3}
                 })
@@ -132,8 +137,8 @@ function (
             domUtils.hide(this.calculationsDiv);
 
             this.resize();
-            
-            this.width = domGeom.getMarginBox(this.domNode).w; 
+
+            this.width = domGeom.getMarginBox(this.domNode).w;
             var that = this;
             this.showAni = coreFx.combine([
                 fx.animateProperty({
@@ -165,29 +170,31 @@ function (
                     node: this.map.container,
                     properties: {
                         width: {
-                            start: ((domGeom.getMarginBox(this.map.container).w / 
+                            start: ((domGeom.getMarginBox(this.map.container).w /
                                     domGeom.getMarginBox(win.body()).w) * 100).toString(),
-                            end: '100', 
+                            end: '100',
                             units: '%'
                         }
                     },
-                    onEnd: function () { that.map.resize(true); }
+                    onEnd: function () {
+                        that.map.resize(true);
+                    }
                 })
             ]);
         },
         resize: function () {
             // summary:
             //      resets the height of the div
-            console.log(this.declaredClass + "::resize", arguments);
-        
+            console.log(this.declaredClass + '::resize', arguments);
+
             domStyle.set(this.domNode, 'height', (domGeom.getMarginBox(win.body()).h - 41) + 'px');
         },
         wireEvents: function () {
             // param: type or return: type
-            console.log(this.declaredClass + "::wireEvents", arguments);
+            console.log(this.declaredClass + '::wireEvents', arguments);
 
             var that = this;
-        
+
             this.own(
                 on(this.durationBtn, 'click', function () {
                     that.renderChart(that.durationData, that.durationTitle);
@@ -209,8 +216,8 @@ function (
             // summary:
             //      description
             // geometry: Polygon
-            console.log(this.declaredClass + "::setData", arguments);
-            
+            console.log(this.declaredClass + '::setData', arguments);
+
             var params = new AreasAndLengthsParameters();
 
             domUtils.show(this.loader);
@@ -235,8 +242,8 @@ function (
             // summary:
             //      sends the data to the soe and wires callbacks
             // geometry: Polygon
-            console.log(this.declaredClass + "::sendDataToSOE", arguments);
-        
+            console.log(this.declaredClass + '::sendDataToSOE', arguments);
+
             esriRequest({
                 url: AGRC.urls.soe,
                 content: {
@@ -256,8 +263,8 @@ function (
             //      flattens all coordinates into a single number array
             //      that suitable for the soe input
             // geometry: Polygon
-            console.log(this.declaredClass + "::formatGeometry", arguments);
-        
+            console.log(this.declaredClass + '::formatGeometry', arguments);
+
             var a = [];
 
             array.forEach(geometry.rings[0], function (coord) {
@@ -270,11 +277,11 @@ function (
             // summary:
             //      callback for soe request
             // json: Object
-            console.log(this.declaredClass + "::onSOEReturn", arguments);
+            console.log(this.declaredClass + '::onSOEReturn', arguments);
 
             this.durationData = this.formatDataForChart(json.solarPotential.duration, 1);
             this.intensityData = this.formatDataForChart(json.solarPotential.radiation, 1000);
-            
+
             if (domClass.contains(this.durationBtn, 'active')) {
                 this.renderChart(this.durationData, this.durationTitle);
             } else if (domClass.contains(this.intensityBtn, 'active')) {
@@ -292,31 +299,31 @@ function (
             //      The new data
             // title: String
             //      The new chart title
-            console.log(this.declaredClass + "::renderChart", arguments);
+            console.log(this.declaredClass + '::renderChart', arguments);
 
             domUtils.show(this.chartDiv);
             domUtils.hide(this.calculationsDiv);
-            
+
             // addSeries doesn't duplicate, if the name is the same as an existing series
-            this.chart.addSeries("series", data);
+            this.chart.addSeries('series', data);
             this.chart.addAxis('values', {
-                vertical: true, 
+                vertical: true,
                 fixUpper: 'major',
                 minorLabels: false,
                 title: title,
                 titleGap: 7,
                 titleFontColor: '#888c76'
             });
-            this.chart.render(); 
+            this.chart.render();
         },
         onSOEError: function (err) {
             // summary:
             //      Error callback
             // err: Error Object
-            console.log(this.declaredClass + "::onSOEError", arguments);
+            console.log(this.declaredClass + '::onSOEError', arguments);
 
             console.error(err);
-        
+
             window.alert(this.errMsg);
             domUtils.hide(this.loader);
         },
@@ -325,11 +332,13 @@ function (
             //      flattens the data into an array
             // data: Object
             // factor: Number
-            console.log(this.declaredClass + "::formatDataForChart", arguments);
-            
+            console.log(this.declaredClass + '::formatDataForChart', arguments);
+
             var array = [];
             for (var prop in data) {
-                array.push(data[prop]/factor);
+                if (data.hasOwnProperty(prop)) {
+                    array.push(data[prop] / factor);
+                }
             }
 
             return array;
@@ -337,8 +346,8 @@ function (
         showCalculations: function () {
             // summary:
             //      shows the calculations div
-            console.log(this.declaredClass + "::showCalculations", arguments);
-            
+            console.log(this.declaredClass + '::showCalculations', arguments);
+
             domUtils.hide(this.chartDiv);
             domUtils.show(this.calculationsDiv);
 
@@ -356,29 +365,29 @@ function (
         show: function () {
             // summary:
             //      description
-            console.log(this.declaredClass + "::show", arguments);
-        
+            console.log(this.declaredClass + '::show', arguments);
+
             this.showAni.play();
         },
         hide: function () {
             // summary:
             //      description
-            console.log(this.declaredClass + "::hide", arguments);
-        
+            console.log(this.declaredClass + '::hide', arguments);
+
             this.hideAni.play();
         },
         onAreasAndLengthsReturn: function (results) {
             // summary:
             //      callback for areasAndLengths geometry service
             // results: {areas: Number[], lengths: Number[]}
-            console.log(this.declaredClass + "::onAreasAndLengthsReturn", arguments);
-        
+            console.log(this.declaredClass + '::onAreasAndLengthsReturn', arguments);
+
             var area = Math.round(results.areas[0], 10);
             var areaTxt = this.formatNumber(area, 'sq ft');
 
             if (area > AGRC.maxSqFt) {
                 window.alert('Your area is: ' + area + ' square feet. Areas more than 10,000 sqft are not allowed. Try drawing a smaller area.');
-                this.hide(); 
+                this.hide();
             } else {
                 this.sendDataToSOE(this.geometry);
 
@@ -392,8 +401,8 @@ function (
             //      formats a number suitable for a text box
             // number: Number
             // type: String (sqft | )
-            console.log(this.declaredClass + "::formatNumber", arguments);
-        
+            console.log(this.declaredClass + '::formatNumber', arguments);
+
             return Formatting.addCommas(number) + ' ' + type;
         },
         updateCalculationValues: function (usable) {
@@ -402,16 +411,16 @@ function (
             //      based upon the usable percentage
             // usable: Number
             //      percentage of usable roof area
-            console.log(this.declaredClass + "::updateCalculationValues", arguments);
-            
-            var sqft = this.totalArea * (usable/100.0);
+            console.log(this.declaredClass + '::updateCalculationValues', arguments);
+
+            var sqft = this.totalArea * (usable / 100.0);
             var size = sqft * AGRC.PVEfficiency;
             var output = size * AGRC.ElectricGenerationFactor;
             var co2 = output * AGRC.CO2SavingsFactor;
 
             this.usableRoofAreaTxt.innerHTML = this.formatNumber(Math.round(sqft), 'sq ft');
-            this.potentialSysSizeTxt.innerHTML = 
-                this.formatNumber(Math.round(size * 10)/10, 'kW');
+            this.potentialSysSizeTxt.innerHTML =
+                this.formatNumber(Math.round(size * 10) / 10, 'kW');
             this.estElecTxt.innerHTML = this.formatNumber(Math.round(output), 'kWh/year');
             this.estCO2Txt.innerHTML = this.formatNumber(Math.round(co2), 'lbs/yr');
         }

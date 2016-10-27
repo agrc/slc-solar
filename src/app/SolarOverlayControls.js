@@ -1,35 +1,35 @@
 define([
-    'dojo/_base/declare', 
-    'dijit/_WidgetBase', 
-    'dijit/_TemplatedMixin', 
+    'dijit/_TemplatedMixin',
+    'dijit/_WidgetBase',
     'dijit/_WidgetsInTemplateMixin',
-    'dojo/text!app/templates/SolarOverlayControls.html',
-    'esri/layers/ArcGISTiledMapServiceLayer',
-    'esri/layers/ArcGISDynamicMapServiceLayer',
+
     'dojo/on',
-    'dojo/_base/lang',
+    'dojo/query',
     'dojo/text!./templates/Legend.html',
-    'dojo/query'
+    'dojo/text!app/templates/SolarOverlayControls.html',
+    'dojo/_base/declare',
+    'dojo/_base/lang',
 
-],
+    'esri/layers/ArcGISDynamicMapServiceLayer',
+    'esri/layers/ArcGISTiledMapServiceLayer'
+], function (
+    _TemplatedMixin,
+    _WidgetBase,
+    _WidgetsInTemplateMixin,
 
-function (
-    declare, 
-    _WidgetBase, 
-    _TemplatedMixin, 
-    _WidgetsInTemplateMixin, 
-    template,
-    ArcGISTiledMapServiceLayer,
-    ArcGISDynamicMapServiceLayer,
     on,
-    lang,
+    query,
     legendHTML,
-    query
-    ) {
+    template,
+    declare,
+    lang,
+
+    ArcGISDynamicMapServiceLayer,
+    ArcGISTiledMapServiceLayer
+) {
     // summary:
     //      Contains the controls for toggling the solar layers as well as controlling their transparency.
-    return declare('app/SolarOverlayControls', 
-        [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+    return declare('app/SolarOverlayControls', [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         widgetsInTemplate: false,
         templateString: template,
         baseClass: 'solar-overlay-controls',
@@ -53,19 +53,16 @@ function (
         // map: agrc/widgets/map/BaseMap
         map: null,
 
-        constructor: function () {
-            console.log(this.declaredClass + "::constructor", arguments);
-        },
         postCreate: function () {
             // summary:
             //      dom is ready
-            console.log(this.declaredClass + "::postCreate", arguments);
+            console.log('app/SolarOverlayControls:postCreate', arguments);
 
             var that = this;
-            var makeLayer = function (url, con) {
-                var lyr = new con(url, {
+            var makeLayer = function (url, Con) {
+                var lyr = new Con(url, {
                     visible: false,
-                    opacity: parseInt(that.slider.getAttribute('data-slider-value'), 10)/100
+                    opacity: parseInt(that.slider.getAttribute('data-slider-value'), 10) / 100
                 });
                 that.map.addLayer(lyr);
 
@@ -97,8 +94,8 @@ function (
         wireEvents: function () {
             // summary:
             //      wires the events for this widget
-            console.log(this.declaredClass + "::wireEvents", arguments);
-            
+            console.log('app/SolarOverlayControls:wireEvents', arguments);
+
             var that = this;
             this.own(
                 on(this.showCheckBox, 'change', lang.hitch(this, this.onShowToggle)),
@@ -109,12 +106,12 @@ function (
             );
             query('input[type="radio"]', this.domNode).forEach(function (rdio) {
                 that.own(
-                    on(rdio, 'change', lang.hitch(that, that.onLayerToggle)),
-                    on(rdio, 'click', function () {
-                        rdio.blur();
-                        rdio.focus();
-                    })
-                );
+                on(rdio, 'change', lang.hitch(that, that.onLayerToggle)),
+                on(rdio, 'click', function () {
+                    rdio.blur();
+                    rdio.focus();
+                })
+            );
             });
 
             $(this.slider).on('slide', lang.hitch(this, this.onSliderChange));
@@ -123,26 +120,26 @@ function (
             // summary:
             //      fires when the checkbox is toggles
             // evt: Event Object
-            console.log(this.declaredClass + "::onShowToggle", arguments);
-        
+            console.log('app/SolarOverlayControls:onShowToggle', arguments);
+
             this.showOverlay = evt.target.checked;
             this.updateLayerVisibility();
         },
         onLayerToggle: function () {
             // summary:
             //      fires when the radio buttons are toggled
-            console.log(this.declaredClass + "::onLayerToggle", arguments);
-        
-            this.updateLayerVisibility();            
+            console.log('app/SolarOverlayControls:onLayerToggle', arguments);
+
+            this.updateLayerVisibility();
         },
         onSliderChange: function (evt) {
             // summary:
             //      fires when the sliders is dragged
             // evt: Event Object
-            console.log(this.declaredClass + "::onSliderChange", arguments);
+            console.log('app/SolarOverlayControls:onSliderChange', arguments);
 
-            var opacity = evt.value/100;
-        
+            var opacity = evt.value / 100;
+
             this.durationLayer.setOpacity(opacity);
             this.intensityLayer.setOpacity(opacity);
             this.solarByZipLayer.setOpacity(opacity);
@@ -151,8 +148,8 @@ function (
             // summary:
             //      sets the two layer visibility appropriately taking into account
             //      showOverlay and the radio button values
-            console.log(this.declaredClass + "::updateLayerVisibility", arguments);
-            
+            console.log('app/SolarOverlayControls:updateLayerVisibility', arguments);
+
             if (this.showOverlay) {
                 var updateLyr = function (lyr, rb) {
                     return (rb.checked) ? lyr.show() : lyr.hide();  // this is cool code. You have to admit :)

@@ -1,26 +1,28 @@
-/* globals AGRC:true*/
 require([
     'app/Popup',
-    'dojo/dom-construct',
-    'dojo/_base/window',
-    'dojo/text!app/tests/data/PolygonGeometry.json',
-    'https://raw.github.com/stdavis/StubModule/master/StubModule.js',
-    'dojo/text!app/tests/data/CalculateForReturn.json',
-    'dojo/dom-style',
-    'dojo/_base/lang'
 
+    'dojo/dom-construct',
+    'dojo/dom-style',
+    'dojo/text!app/tests/data/CalculateForReturn.json',
+    'dojo/text!app/tests/data/PolygonGeometry.json',
+    'dojo/_base/lang',
+    'dojo/_base/window',
+
+    'stubmodule'
 ],
 
 function (
     Popup,
+
     domConstruct,
-    win,
-    polygonGeometryJSON,
-    StubModule,
-    CalculateForReturnJSON,
     domStyle,
-    lang
-    ) {
+    CalculateForReturnJSON,
+    polygonGeometryJSON,
+    lang,
+    win,
+
+    stubmodule
+) {
     describe('app/Popup', function () {
         window.alert = function () {};
         var testWidget;
@@ -30,12 +32,12 @@ function (
         };
         var geometry = JSON.parse(polygonGeometryJSON);
         geometry.toJson = function () {};
-        var numbers = "[419386.0797017351,4504446.884500817,419401.60597310076,4504446.287336534,419401.3073909591,4504429.566736602,419385.18395531015,4504430.462483027,419386.0797017351,4504446.884500817]";
+        var numbers = '[419386.0797017351,4504446.884500817,419401.60597310076,4504446.287336534,419401.3073909591,4504429.566736602,419385.18395531015,4504430.462483027,419386.0797017351,4504446.884500817]';
         var seriesData = [93.374449339207047, 118.77533039647577, 192.0660792951542, 251.03964757709252, 297.37004405286342, 278.85022026431716, 288.61233480176213, 273.88986784140968, 204.08810572687224, 154.90308370044053, 98.475770925110126, 67.859030837004411];
         var map = {
             container: domConstruct.create('div'),
             graphics: {
-                on: function(){}
+                on: function () {}
             }
         };
         var AGRCclone = lang.clone(AGRC);
@@ -53,19 +55,19 @@ function (
             expect(testWidget).toEqual(jasmine.any(Popup));
         });
         describe('postCreate', function () {
-            it("creates a pie chart", function () {
+            it('creates a pie chart', function () {
                 expect(testWidget.chart).toBeDefined();
             });
         });
         describe('setData', function () {
-            it("send data to geometry service", function () {
+            it('send data to geometry service', function () {
                 spyOn(testWidget.geoService, 'areasAndLengths');
 
                 testWidget.setData(geometry);
 
                 expect(testWidget.geoService.areasAndLengths).toHaveBeenCalled();
             });
-            it("sets the geometry property", function () {
+            it('sets the geometry property', function () {
                 testWidget.setData(geometry);
 
                 expect(testWidget.geometry).toEqual(geometry);
@@ -77,14 +79,14 @@ function (
             var testWidget2;
             beforeEach(function () {
                 requestSpy = jasmine.createSpy('request').andReturn({then: function () {}});
-                StubbedPopup = StubModule('app/Popup', {
+                StubbedPopup = stubmodule('app/Popup', {
                     'esri/request': requestSpy
                 });
 
                 testWidget2 = new StubbedPopup({map: map});
                 testWidget2.startup();
             });
-            it("send the geometry to the service", function () {
+            it('send the geometry to the service', function () {
                 testWidget2.sendDataToSOE(geometry);
 
                 expect(requestSpy).toHaveBeenCalledWith({
@@ -92,7 +94,7 @@ function (
                     content: {
                         f: 'json',
                         geometry: numbers,
-                        durationThreshold: "300"
+                        durationThreshold: '300'
                     },
                     handleAs: 'json',
                     callbackParamName: 'callback'
@@ -100,14 +102,14 @@ function (
             });
         });
         describe('formatGeometry', function () {
-            it("flattens the coordinate pars", function () {
+            it('flattens the coordinate pars', function () {
                 var result = testWidget.formatGeometry(geometry);
 
                 expect(result).toEqual(numbers);
             });
         });
         describe('onSOEError', function () {
-            it("display an alert", function () {
+            it('display an alert', function () {
                 spyOn(window, 'alert');
 
                 testWidget.onSOEError();
@@ -116,25 +118,25 @@ function (
             });
         });
         describe('formatDataForChart', function () {
-            it("flatten all of the values into an array", function () {
+            it('flatten all of the values into an array', function () {
                 var input = JSON.parse(CalculateForReturnJSON).solarPotential.duration;
 
                 expect(testWidget.formatDataForChart(input, 1)).toEqual(seriesData);
             });
-            it("uses a division factor", function () {
+            it('uses a division factor', function () {
                 var input = JSON.parse(CalculateForReturnJSON).solarPotential.radiation;
 
                 expect(testWidget.formatDataForChart(input, 1000)[0]).toEqual(33.757634361233485);
             });
         });
         describe('onSOEReturn', function () {
-            it("stores chart data", function () {
+            it('stores chart data', function () {
                 testWidget.onSOEReturn(JSON.parse(CalculateForReturnJSON));
 
                 expect(testWidget.durationData.length).toBe(12);
                 expect(testWidget.intensityData.length).toBe(12);
             });
-            it("should render the correct chart", function () {
+            it('should render the correct chart', function () {
                 spyOn(testWidget, 'showCalculations');
                 spyOn(testWidget, 'renderChart');
 
@@ -143,9 +145,9 @@ function (
                 testWidget.onSOEReturn(JSON.parse(CalculateForReturnJSON));
 
                 expect(testWidget.renderChart).toHaveBeenCalledWith(testWidget.intensityData, testWidget.intensityTitle);
-                expect(testWidget.showCalculations).not.toHaveBeenCalled(); 
+                expect(testWidget.showCalculations).not.toHaveBeenCalled();
             });
-            it("shows the calculations tab if selected", function () {
+            it('shows the calculations tab if selected', function () {
                 spyOn(testWidget, 'showCalculations');
                 spyOn(testWidget, 'renderChart');
 
@@ -154,24 +156,24 @@ function (
                 testWidget.onSOEReturn(JSON.parse(CalculateForReturnJSON));
 
                 expect(testWidget.renderChart).not.toHaveBeenCalled();
-                expect(testWidget.showCalculations).toHaveBeenCalled(); 
+                expect(testWidget.showCalculations).toHaveBeenCalled();
             });
         });
         describe('renderChart', function () {
-            it("add's new data and title and renders", function () {
+            it('add\'s new data and title and renders', function () {
                 spyOn(testWidget.chart, 'addSeries');
                 spyOn(testWidget.chart, 'render');
                 var title = 'blah';
-                
+
                 testWidget.renderChart(seriesData, title);
 
                 expect(testWidget.chart.addSeries).toHaveBeenCalledWith('series', seriesData);
-                expect(testWidget.chart.render).toHaveBeenCalled(); 
+                expect(testWidget.chart.render).toHaveBeenCalled();
                 expect(testWidget.chart.axes.values.opt.title).toEqual(title);
             });
         });
         describe('showCalculations', function () {
-            it("hide the chart and show the calculations div", function () {
+            it('hide the chart and show the calculations div', function () {
                 testWidget.showCalculations();
 
                 expect(domStyle.get(testWidget.chartDiv, 'display')).toEqual('none');
@@ -182,7 +184,7 @@ function (
             beforeEach(function () {
                 spyOn(testWidget, 'sendDataToSOE');
             });
-            it("check the max area", function () {
+            it('check the max area', function () {
                 testWidget.onAreasAndLengthsReturn({
                     areas: [AGRC.maxSqFt + 1],
                     lengths: [10]
@@ -197,7 +199,7 @@ function (
 
                 expect(testWidget.sendDataToSOE).toHaveBeenCalled();
             });
-            it("sets the fields in the calculations tab", function () {
+            it('sets the fields in the calculations tab', function () {
                 var value = 1000;
                 var expected = '1,000 sq ft';
 
@@ -206,7 +208,7 @@ function (
                 expect(testWidget.totalAreaTxt.innerHTML).toEqual(expected);
                 expect(testWidget.usableRoofAreaTxt.innerHTML).toEqual(expected);
             });
-            it("sets the totalArea property", function () {
+            it('sets the totalArea property', function () {
                 var value = 1000;
 
                 testWidget.onAreasAndLengthsReturn({areas: [value]});
@@ -215,16 +217,16 @@ function (
             });
         });
         describe('formatNumber', function () {
-            it("formats sq ft", function () {
+            it('formats sq ft', function () {
                 expect(testWidget.formatNumber(1000, 'sq ft')).toEqual('1,000 sq ft');
             });
         });
         describe('updateCalculationValues', function () {
-            it("updates the values based upon the slider and total sq ft", function () {
+            it('updates the values based upon the slider and total sq ft', function () {
                 testWidget.totalArea = 1842;
                 testWidget.updateCalculationValues(50);
 
-                // overriding these values to make the tests less brittle if the 
+                // overriding these values to make the tests less brittle if the
                 // configs in the production app are changed in the future...
                 AGRC.PVEfficiency = 0.0167;
                 AGRC.ElectricGenerationFactor = 1399;

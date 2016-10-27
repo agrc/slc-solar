@@ -1,14 +1,8 @@
 define([
-    'dojo/parser', 
-
-    'app/App'
-], 
-
-function (
-    parser
-    ) {
+], function (
+) {
     var slcSolarServer = 'http://maps.slcgov.com/slcisolar/rest/services/';
-    window.AGRC = {
+    return {
         // errorLogger: ijit.modules.ErrorLogger
         errorLogger: null,
 
@@ -32,15 +26,15 @@ function (
 
         urls: {
             duration: slcSolarServer + 'solar/SLCO_SolarDuration/MapServer',
-            radiation: slcSolarServer + "solar/SLCO_SolarRadiation/MapServer",
-            soe: slcSolarServer + "solar/SLCO_SolarPts/MapServer/exts/SolarCalculatorSoe/CalculateFor?",
+            radiation: slcSolarServer + 'solar/SLCO_SolarRadiation/MapServer',
+            soe: slcSolarServer + 'solar/SLCO_SolarPts/MapServer/exts/SolarCalculatorSoe/CalculateFor?',
             basemap: '??',
             geometry: slcSolarServer + 'Utilities/Geometry/GeometryServer',
             solarByZip: slcSolarServer + 'solar/solarByZipCode/MapServer'
         },
 
         // maxSqFt: Number
-        //      The max square footage of a polygon that is allowed to be sent 
+        //      The max square footage of a polygon that is allowed to be sent
         //      to the soe
         maxSqFt: 10000,
 
@@ -56,7 +50,4 @@ function (
         /** PV panel production rate for given efficiency */
         PVEfficiency: 0.0167 //18% panels at 16.7 W per sq foot
     };
-
-    // lights...camera...action!
-    parser.parse();
 });

@@ -1,25 +1,30 @@
 require([
     'app/App',
+
+    'dojo/dom-class',
     'dojo/dom-construct',
+    'dojo/text!app/tests/data/PolygonGeometry.json',
     'dojo/_base/window',
-    'https://raw.github.com/stdavis/StubModule/master/StubModule.js',
+
     'esri/map',
     'esri/toolbars/draw',
-    'dojo/dom-class',
-    'dojo/text!app/tests/data/PolygonGeometry.json'
-    
+
+    'https://raw.github.com/stdavis/StubModule/master/StubModule.js'
 ],
 
 function (
     App,
+
+    domClass,
     domConstruct,
+    polygonJSON,
     win,
-    stubModule,
+
     Map,
     Draw,
-    domClass,
-    polygonJSON
-    ) {
+
+    stubModule
+) {
     describe('app/App', function () {
         var testWidget;
         var geometry;
@@ -37,12 +42,12 @@ function (
             it('creates a valid object', function () {
                 expect(testWidget).toEqual(jasmine.any(App));
             });
-            it("creates a valid symbol", function () {
+            it('creates a valid symbol', function () {
                 expect(testWidget.symbol).toBeDefined();
             });
         });
         describe('postCreate', function () {
-            it("inits the find Address widget", function () {
+            it('inits the find Address widget', function () {
                 var findAddressConstructor = jasmine.createSpy('FindAddress');
                 var Stubbed = stubModule('app/App', {
                     'agrc/widgets/locate/FindAddress': findAddressConstructor
@@ -57,7 +62,7 @@ function (
 
                 testWidget2.destroy();
             });
-            xit("inits the solar overlay controls widget", function () {
+            xit('inits the solar overlay controls widget', function () {
                 var solarOverlayControlsConstructor = jasmine.createSpy('solarOverlayControlsConstructor');
                 var Stubbed = stubModule('app/App', {
                     'app/SolarOverlayControls': solarOverlayControlsConstructor
@@ -71,14 +76,14 @@ function (
 
                 testWidget2.destroy();
             });
-            it("calls wireEvents", function () {
+            it('calls wireEvents', function () {
                 spyOn(testWidget, 'wireEvents');
 
                 testWidget.postCreate();
 
                 expect(testWidget.wireEvents).toHaveBeenCalled();
             });
-            it("inits the popup widget", function () {
+            it('inits the popup widget', function () {
                 expect(testWidget.popup).toBeDefined();
             });
         });
@@ -86,15 +91,15 @@ function (
             beforeEach(function () {
                 testWidget.initMap();
             });
-            it("creates a valid map object", function () {
+            it('creates a valid map object', function () {
                 expect(testWidget.map).toEqual(jasmine.any(Map));
             });
-            it("creates a Draw object", function () {
-                expect(testWidget.draw).toEqual(jasmine.any(Draw));                
+            it('creates a Draw object', function () {
+                expect(testWidget.draw).toEqual(jasmine.any(Draw));
             });
         });
         describe('wireEvents', function () {
-            it("wires the draw button", function () {
+            it('wires the draw button', function () {
                 spyOn(testWidget, 'onDrawClick');
 
                 testWidget.wireEvents();
@@ -102,7 +107,7 @@ function (
 
                 expect(testWidget.onDrawClick).toHaveBeenCalled();
             });
-            it("wires the onDrawEnd event", function () {
+            it('wires the onDrawEnd event', function () {
                 waitsFor(function () {
                     return testWidget.map.loaded;
                 });
@@ -116,7 +121,7 @@ function (
                     expect(testWidget.onDrawEnd).toHaveBeenCalled();
                 });
             });
-            it("wires the clear button", function () {
+            it('wires the clear button', function () {
                 spyOn(testWidget, 'onClearDrawing');
 
                 testWidget.wireEvents();
@@ -131,27 +136,27 @@ function (
                 spyOn(testWidget.draw, 'deactivate');
                 spyOn(testWidget, 'onClearDrawing');
             });
-            it("activates the drawing toolbar if the button is activated", function () {
+            it('activates the drawing toolbar if the button is activated', function () {
                 testWidget.drawBtn.click();
 
                 expect(testWidget.draw.activate).toHaveBeenCalledWith(Draw.POLYGON);
                 expect(testWidget.draw.deactivate).not.toHaveBeenCalled();
             });
-            it("deactivates drawing toolbar if the button is being deactivated", function () {
+            it('deactivates drawing toolbar if the button is being deactivated', function () {
                 domClass.add(testWidget.drawBtn, 'active');
-                testWidget.drawBtn.click();                
+                testWidget.drawBtn.click();
 
                 expect(testWidget.draw.activate).not.toHaveBeenCalled();
                 expect(testWidget.draw.deactivate).toHaveBeenCalled();
             });
-            it("clears any existing drawings", function () {
+            it('clears any existing drawings', function () {
                 testWidget.drawBtn.click();
 
                 expect(testWidget.onClearDrawing).toHaveBeenCalled();
             });
         });
         describe('onDrawEnd', function () {
-            it("adds the graphic to the map", function () {
+            it('adds the graphic to the map', function () {
                 waitsFor(function () {
                     return testWidget.map.loaded;
                 });
@@ -164,7 +169,7 @@ function (
                     expect(testWidget.map.graphics.add).toHaveBeenCalled();
                 });
             });
-            it("disabled the draw toolbar and button", function () {
+            it('disabled the draw toolbar and button', function () {
                 waitsFor(function () {
                     return testWidget.map.loaded;
                 });
@@ -172,16 +177,16 @@ function (
                 runs(function () {
                     testWidget.drawBtn.click();
                     spyOn(testWidget.draw, 'deactivate');
-                    
+
                     testWidget.onDrawEnd(geometry);
 
                     expect(testWidget.draw.deactivate).toHaveBeenCalled();
-                    expect(domClass.contains(testWidget.drawBtn, 'active')).toBe(false); 
+                    expect(domClass.contains(testWidget.drawBtn, 'active')).toBe(false);
                 });
             });
         });
         describe('onClearDrawing', function () {
-            it("clears the map graphics", function () {
+            it('clears the map graphics', function () {
                 waitsFor(function () {
                     return testWidget.map.loaded;
                 });

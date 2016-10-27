@@ -1,17 +1,18 @@
 require([
     'app/SolarOverlayControls',
-    'dojo/dom-construct',
-    'dojo/_base/window',
-    'dojo/on'
 
+    'dojo/dom-construct',
+    'dojo/on',
+    'dojo/_base/window'
 ],
 
 function (
     SolarOverlayControls,
+
     domConstruct,
-    win,
-    on
-    ) {
+    on,
+    win
+) {
     describe('app/SolarOverlayControls', function () {
         var testWidget;
         var destroy = function (widget) {
@@ -33,13 +34,13 @@ function (
             expect(testWidget).toEqual(jasmine.any(SolarOverlayControls));
         });
         describe('postCreate', function () {
-            it("adds the layers to the map", function () {
+            it('adds the layers to the map', function () {
                 expect(map.addLayer.callCount).toBe(3);
                 expect(map.addLayer).toHaveBeenCalledWith(testWidget.durationLayer);
             });
         });
         describe('wireEvents', function () {
-            it("wires the control events", function () {
+            it('wires the control events', function () {
                 testWidget.showCheckBox.checked = false;
                 spyOn(testWidget, 'onShowToggle');
                 spyOn(testWidget, 'onLayerToggle');
@@ -64,7 +65,7 @@ function (
             });
         });
         describe('onShowToggle', function () {
-            it("set the showOverlay property", function () {
+            it('set the showOverlay property', function () {
                 testWidget.onShowToggle({target: {checked: true}});
 
                 expect(testWidget.showOverlay).toBeTruthy();
@@ -73,7 +74,7 @@ function (
 
                 expect(testWidget.showOverlay).toBeFalsy();
             });
-            it("fires updateLayerVisibility", function () {
+            it('fires updateLayerVisibility', function () {
                 spyOn(testWidget, 'updateLayerVisibility');
 
                 testWidget.onShowToggle({target: {checked: true}});
@@ -89,7 +90,7 @@ function (
                 spyOn(testWidget.intensityLayer, 'hide');
                 spyOn(testWidget, 'onLayerToggle');
             });
-            it("calls show and hide on layers depending on radio button checked status - intensity checked", function () {
+            it('calls show and hide on layers depending on radio button checked status - intensity checked', function () {
                 testWidget.showOverlay = true;
                 testWidget.intensityRadioBtn.checked = true;
 
@@ -100,7 +101,7 @@ function (
                 expect(testWidget.durationLayer.show).not.toHaveBeenCalled();
                 expect(testWidget.intensityLayer.hide).not.toHaveBeenCalled();
             });
-            it("calls show and hide on layers depending on radio button checked status - duration checked", function () {
+            it('calls show and hide on layers depending on radio button checked status - duration checked', function () {
                 testWidget.showOverlay = true;
                 testWidget.durationRadioBtn.checked = true;
 
@@ -111,7 +112,7 @@ function (
                 expect(testWidget.durationLayer.show).toHaveBeenCalled();
                 expect(testWidget.intensityLayer.hide).toHaveBeenCalled();
             });
-            it("hides both layers if showOverlay is false", function () {
+            it('hides both layers if showOverlay is false', function () {
                 testWidget.showOverlay = false;
 
                 testWidget.updateLayerVisibility();
@@ -123,7 +124,7 @@ function (
             });
         });
         describe('onLayerToggle', function () {
-            it("calls updateLayerVisibility", function () {
+            it('calls updateLayerVisibility', function () {
                 spyOn(testWidget, 'updateLayerVisibility');
 
                 testWidget.onLayerToggle();
@@ -132,15 +133,15 @@ function (
             });
         });
         describe('onSliderChange', function () {
-            it("updates the opacity on both layers", function () {
+            it('updates the opacity on both layers', function () {
                 spyOn(testWidget.durationLayer, 'setOpacity');
                 spyOn(testWidget.intensityLayer, 'setOpacity');
                 var value = 80;
 
                 testWidget.onSliderChange({value: value});
 
-                expect(testWidget.durationLayer.setOpacity).toHaveBeenCalledWith(value/100);
-                expect(testWidget.intensityLayer.setOpacity).toHaveBeenCalledWith(value/100);
+                expect(testWidget.durationLayer.setOpacity).toHaveBeenCalledWith(value / 100);
+                expect(testWidget.intensityLayer.setOpacity).toHaveBeenCalledWith(value / 100);
             });
         });
     });

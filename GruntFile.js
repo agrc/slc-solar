@@ -335,7 +335,7 @@ module.exports = function (grunt) {
         watch: {
             eslint: {
                 files: jsFiles,
-                tasks: ['newer:eslint:main', 'jasmine:main:build']
+                tasks: ['eslint:main', 'jasmine:main:build']
             },
             src: {
                 files: jsFiles.concat(otherFiles),
@@ -343,7 +343,7 @@ module.exports = function (grunt) {
             },
             stylus: {
                 files: 'src/app/**/*.styl',
-                tasks: ['newer:stylus']
+                tasks: ['stylus']
             }
         }
     });
