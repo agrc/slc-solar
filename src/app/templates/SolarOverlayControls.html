@@ -1,0 +1,21 @@
+<div>
+    <form>
+        <label class='checkbox'>
+            <input type="checkbox" data-dojo-attach-point='showCheckBox'> Show Overlay
+        </label>
+        <label class="radio">
+            <input type='radio' value="duration" name='overlayType' checked data-dojo-attach-point='durationRadioBtn'> Sunlight Duration
+            <i class="icon-question-sign bootstrap-popover" data-image='app/resources/images/solar_legend.png'></i>
+        </label>
+        <label class="radio">
+            <input type='radio' value="radiation" name='overlayType' data-dojo-attach-point='intensityRadioBtn'> Sunlight Intensity
+            <i class="icon-question-sign bootstrap-popover" data-image='app/resources/images/solar_legend.png'></i>
+        </label>
+        <label class="radio">
+            <input type='radio' value="zip" name='overlayType' data-dojo-attach-point='zipRadioBtn'> Solar By Zip Code
+            <i class="icon-question-sign bootstrap-popover" data-image='app/resources/images/solarByZipCodeLegend.PNG'></i>
+        </label>
+        Opacity
+        <input type="text" class="span slider" data-slider-min="0" data-slider-max="100" data-slider-value='70' data-slider-tooltip='hide' data-dojo-attach-point='slider'>
+    </form>
+</div>

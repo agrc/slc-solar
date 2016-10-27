@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="../resources/App.css">
+        <link rel="stylesheet" href="../../dijit/themes/claro/claro.css">
+        <style>
+            #testDiv {
+                width: 400px;
+                margin: 20px;
+            }
+        </style>
+        <script>
+            dojoConfig = {
+                packagePaths: {
+                    '/projects/SolarMapWidget/src/': [
+                        'app',
+                        'agrc',
+                        'ijit',
+                        'bootstrap',
+                        'slider'
+                    ]
+                }
+            };
+        </script>
+        <script src="http://serverapi.arcgisonline.com/jsapi/arcgis/3.4"></script>
+        <script>
+            require([
+                'app/Popup',
+                'dojo/text!app/tests/data/CalculateForReturn.json',
+
+                'bootstrap/js/jquery-1.9.1',
+                'bootstrap/js/bootstrap',
+                'dojo/domReady!'
+            ], function (
+                Popup,
+                ReturnJSON
+                ) {
+                popup = new Popup({}, 'testDiv');
+
+                popup.onSEOReturn(JSON.parse(ReturnJSON));
+            });
+        </script>
+    </head>
+    <body class="claro">
+        <div id="testDiv"></div>
+    </body>
+</html>

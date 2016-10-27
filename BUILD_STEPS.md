@@ -1,0 +1,12 @@
+- _SpecRunner.html
+- Bump app version number and update changelog
+- Save new traffic.har file
+- change apiKey in main.js from localhost to server
+- build.sh
+- test in dist
+- change server to point to url in dist/EmbeddedMapLoader.js
+- push to server and test dist again
+- Third Sun's test page: http://solarsimplified.org/index.php?option=com_wrapper&view=wrapper&Itemid=400
+    - Looks like they are loading my widget in an iframe using my test page:
+- change apiKey in main.js back
+- change dist/EmbeddedMapLoader.js to point back to relative path

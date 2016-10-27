@@ -1,0 +1,61 @@
+.esriPopup .contentPane {
+    overflow: hidden;
+}
+.popup-widget {
+    height: 100%;
+    position: absolute;
+    top: 41px;
+    background-color: white;
+    right: -420px;
+    z-index: 99;
+    width: 420px;
+    -webkit-box-shadow: inset 0 1px 10px rgba(0, 0, 0, 0.1);
+         -moz-box-shadow: inset 0 1px 10px rgba(0, 0, 0, 0.1);
+              box-shadow: inset 0 1px 10px rgba(0, 0, 0, 0.1);
+}
+.popup-widget .padder {
+    padding: 10px;
+}
+.popup-widget div[data-dojo-attach-point='chartDiv'] {
+    display: none;
+}
+.popup-widget .btn-group {
+    margin-bottom: 5px;
+}
+.popup-widget .loader {
+    z-index: 100;
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background: url('../../agrc/resources/images/loader_MAP.gif');
+    top: 174px;
+    left: 190px;
+    display: none;
+}
+.popup-widget div[data-dojo-attach-point='calculationsDiv'] {
+    margin-top: 10px;
+}
+.popup-widget .form-horizontal .uneditable-input,
+.popup-widget .slider {
+    width: 150px;
+}
+.popup-widget .form-horizontal .controls {
+    margin-left: 225px;
+}
+.popup-widget .form-horizontal label {
+    width: 212px;
+}
+.popup-widget .form-horizontal .controls .tooltip {
+    width: auto;
+    border: none;
+    background-color: transparent;
+    font-size: 11px;
+    margin-top: 4px;
+}
+.popup-widget .slider {
+    height: 30px;
+}
+.popup-widget .form-horizontal .tooltip-a {
+    margin-top: 0;
+    font-size: 0.85em;
+}
