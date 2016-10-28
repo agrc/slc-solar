@@ -128,14 +128,16 @@ define([
             this.map = new BaseMap(this.mapDiv, {
                 useDefaultBaseMap: false,
                 extent: new Extent({
-                    // xmax: -12402133.995934062,
-                    // xmin: -12512203.316664688,
-                    // ymax: 4987492.188899369,
-                    // ymin: 4930164.417685502,
-                    xmin: -12455146.508744448,
-                    ymin: 4964198.303111609,
-                    xmax: -12454994.231852163,
-                    ymax: 4964310.2714147605,
+                    xmax: -12402133.995934062,
+                    xmin: -12512203.316664688,
+                    ymax: 4987492.188899369,
+                    ymin: 4930164.417685502,
+
+                    // test extent that is zoomed in
+                    // xmin: -12455146.508744448,
+                    // ymin: 4964198.303111609,
+                    // xmax: -12454994.231852163,
+                    // ymax: 4964310.2714147605,
                     spatialReference: {
                         wkid: 3857
                     }
