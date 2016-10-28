@@ -1,35 +1,4 @@
-/* jshint camelcase:false */
-var osx = 'OS X 10.10';
-var windows = 'Windows 8.1';
-var browsers = [{
-    // OSX
-    browserName: 'safari',
-    platform: osx
-}, {
-    // Windows
-    browserName: 'firefox',
-    platform: windows
-}, {
-    browserName: 'chrome',
-    platform: windows,
-    version: 'latest'
-}, {
-    browserName: 'microsoftedge',
-    platform: 'Windows 10'
-}, {
-    browserName: 'internet explorer',
-    platform: windows,
-    version: '11'
-}, {
-    browserName: 'internet explorer',
-    platform: 'Windows 8',
-    version: '10'
-}, {
-    browserName: 'internet explorer',
-    platform: 'Windows 7',
-    version: '9'
-}];
-
+/* eslint camelcase:0 */
 module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
 
@@ -70,27 +39,10 @@ module.exports = function (grunt) {
         '!stubmodule/**',
         '!util/**'
     ];
-    var deployDir = 'SGID';
+    var deployDir = 'slcsolar';
     var secrets;
-    var sauceConfig = {
-        urls: ['http://127.0.0.1:8000/_SpecRunner.html?catch=false'],
-        tunnelTimeout: 120,
-        build: process.env.TRAVIS_JOB_ID,
-        browsers: browsers,
-        testname: 'atlas',
-        maxRetries: 10,
-        maxPollRetries: 10,
-        'public': 'public',
-        throttled: 5,
-        sauceConfig: {
-            'max-duration': 1800
-        },
-        statusCheckAttempts: 500
-    };
     try {
         secrets = grunt.file.readJSON('secrets.json');
-        sauceConfig.username = secrets.sauce_name;
-        sauceConfig.key = secrets.sauce_key;
     } catch (e) {
         // swallow for build server
 
@@ -99,11 +51,6 @@ module.exports = function (grunt) {
 
         secrets = {
             stage: {
-                host: '',
-                username: '',
-                password: ''
-            },
-            prod: {
                 host: '',
                 username: '',
                 password: ''
@@ -205,7 +152,8 @@ module.exports = function (grunt) {
                         'src/app/tests/jasmineAMDErrorChecking.js',
                         'src/jquery/dist/jquery.js'
                     ],
-                    host: 'http://localhost:8000'
+                    host: 'http://localhost:8000',
+                    keepRunner: true
                 }
             }
         },
@@ -229,11 +177,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-        'saucelabs-jasmine': {
-            all: {
-                options: sauceConfig
-            }
-        },
         secrets: secrets,
         sftp: {
             stage: {
@@ -244,17 +187,6 @@ module.exports = function (grunt) {
                     host: '<%= secrets.stage.host %>',
                     username: '<%= secrets.stage.username %>',
                     password: '<%= secrets.stage.password %>'
-                }
-            },
-            prod: {
-                files: {
-                    './': 'deploy/deploy.zip'
-                },
-                options: {
-                    host: '<%= secrets.prod.host %>',
-                    username: '<%= secrets.prod.username %>',
-                    password: '<%= secrets.prod.password %>',
-                    path: './upload/' + deployDir
                 }
             },
             options: {
@@ -274,14 +206,6 @@ module.exports = function (grunt) {
                     host: '<%= secrets.stage.host %>',
                     username: '<%= secrets.stage.username %>',
                     password: '<%= secrets.stage.password %>'
-                }
-            },
-            prod: {
-                command: ['cd wwwroot/' + deployDir, 'unzip -oq deploy.zip', 'rm deploy.zip'].join(';'),
-                options: {
-                    host: '<%= secrets.prod.host %>',
-                    username: '<%= secrets.prod.username %>',
-                    password: '<%= secrets.prod.password %>'
                 }
             }
         },
@@ -364,8 +288,7 @@ module.exports = function (grunt) {
     ]);
     grunt.registerTask('deploy-prod', [
         'clean:deploy',
-        'compress:main',
-        'sftp:prod'
+        'compress:main'
     ]);
     grunt.registerTask('build-stage', [
         'parallel:buildAssets',
@@ -380,15 +303,14 @@ module.exports = function (grunt) {
         'sftp:stage',
         'sshexec:stage'
     ]);
-    grunt.registerTask('sauce', [
-        'jasmine:main:build',
-        'connect',
-        'saucelabs-jasmine'
-    ]);
     grunt.registerTask('travis', [
         'verbosity:main',
         'eslint:main',
-        'sauce',
+        'unit',
         'build-stage'
+    ]);
+    grunt.registerTask('unit', [
+        'connect',
+        'jasmine'
     ]);
 };

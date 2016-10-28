@@ -32,7 +32,6 @@
     "grunt-newer": "^1.2.0",
     "grunt-parallel": "^0.5.1",
     "grunt-processhtml": "^0.4.1",
-    "grunt-saucelabs": "^9.0.0",
     "grunt-ssh": "^0.12.9",
     "grunt-verbosity": "^1.0.1",
     "load-grunt-tasks": "^3.5.2",

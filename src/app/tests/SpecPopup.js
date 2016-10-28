@@ -24,7 +24,9 @@ require([
     stubmodule
 ) {
     describe('app/Popup', function () {
-        window.alert = function () {};
+        if (!/PhantomJS/.test(navigator.userAgent)) {
+            window.alert = function () {};
+        }
         var testWidget;
         var destroy = function (widget) {
             widget.destroyRecursive();
