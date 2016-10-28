@@ -40,12 +40,8 @@ define([
         // configs copied from old site...
         /** Electric Generation Factor*/
         ElectricGenerationFactor: 1399, //for SLC area 1kw per year = 1399 kWh
-        /** Cost per kWh */
-        CostSavingsFactor: 0.075292, //cost per kWh for Rocky Mountain Power (Utah) as of 10/13/10
         /** CO2 output per kWh */
         CO2SavingsFactor: 1.21, //1.21 lbs of C02 per kilowatt hour basedon Rocky Mountain Power (Utah)
-        /** Default Roof Usage Percentage */
-        RoofUsageFactor: 1.0,
         /** PV panel production rate for given efficiency */
         PVEfficiency: 0.0167 //18% panels at 16.7 W per sq foot
     };
