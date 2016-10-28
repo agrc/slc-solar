@@ -7,7 +7,9 @@ require([
     'dojo/text!app/tests/data/PolygonGeometry.json',
 
     'esri/map',
-    'esri/toolbars/draw'
+    'esri/toolbars/draw',
+
+    'stubmodule'
 ], function (
     App,
     config,
@@ -17,15 +19,32 @@ require([
     polygonJSON,
 
     Map,
-    Draw
+    Draw,
+
+    stubmodule
 ) {
     describe('app/App', function () {
         var testWidget;
         var geometry;
-        beforeEach(function () {
-            testWidget = new App({}, domConstruct.create('div', {}, document.body));
-            geometry = JSON.parse(polygonJSON);
-            geometry.toJson = function () {};
+        var StubbedApp;
+        beforeEach(function (done) {
+            stubmodule('app/App', {
+                'agrc/widgets/locate/FindAddress': function () {}
+            }).then(function (StubbedModule) {
+                StubbedApp = StubbedModule;
+                testWidget = new StubbedModule({}, domConstruct.create('div', {}, document.body));
+                testWidget.startup();
+                testWidget.map = {
+                    graphics: {
+                        add: function () {},
+                        clear: function () {}
+                    }
+                };
+                geometry = JSON.parse(polygonJSON);
+                geometry.toJson = function () {};
+
+                done();
+            });
         });
         afterEach(function () {
             testWidget.destroy();
@@ -34,7 +53,7 @@ require([
 
         describe('constructor', function () {
             it('creates a valid object', function () {
-                expect(testWidget).toEqual(jasmine.any(App));
+                expect(testWidget).toEqual(jasmine.any(StubbedApp));
             });
             it('creates a valid symbol', function () {
                 expect(testWidget.symbol).toBeDefined();
