@@ -39,7 +39,7 @@ module.exports = function (grunt) {
         '!stubmodule/**',
         '!util/**'
     ];
-    var deployDir = 'slcsolar';
+    var deployDir = 'wwwroot/slcsolar';
     var secrets;
     try {
         secrets = grunt.file.readJSON('secrets.json');
@@ -190,8 +190,7 @@ module.exports = function (grunt) {
                 }
             },
             options: {
-                createDirectories: true,
-                path: './wwwroot/' + deployDir + '/',
+                path: './' + deployDir + '/',
                 srcBasePath: 'deploy/',
                 showProgress: true
             }
@@ -201,7 +200,7 @@ module.exports = function (grunt) {
 
             },
             stage: {
-                command: ['cd wwwroot/' + deployDir, 'unzip -oq deploy.zip', 'rm deploy.zip'].join(';'),
+                command: ['cd ' + deployDir, 'unzip -oq deploy.zip', 'rm deploy.zip'].join(';'),
                 options: {
                     host: '<%= secrets.stage.host %>',
                     username: '<%= secrets.stage.username %>',
