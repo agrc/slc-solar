@@ -388,7 +388,7 @@ define([
             // the sizing is all messed up
             if (!this.sliderInit) {
                 $(this.usableSlider).slider({
-                    formater: function (value) {
+                    formatter: function (value) {
                         return value + '%';
                     }
                 });
@@ -428,7 +428,7 @@ define([
             } else {
                 this.sendDataToSOE(this.geometry);
 
-                this.totalAreaTxt.innerHTML = areaTxt;
+                this.totalAreaTxt.value = areaTxt;
                 this.totalArea = area;
                 this.updateCalculationValues(100);
             }
@@ -455,11 +455,11 @@ define([
             var output = size * config.ElectricGenerationFactor;
             var co2 = output * config.CO2SavingsFactor;
 
-            this.usableRoofAreaTxt.innerHTML = this.formatNumber(Math.round(sqft), 'sq ft');
-            this.potentialSysSizeTxt.innerHTML =
+            this.usableRoofAreaTxt.value = this.formatNumber(Math.round(sqft), 'sq ft');
+            this.potentialSysSizeTxt.value =
                 this.formatNumber(Math.round(size * 10) / 10, 'kW');
-            this.estElecTxt.innerHTML = this.formatNumber(Math.round(output), 'kWh/year');
-            this.estCO2Txt.innerHTML = this.formatNumber(Math.round(co2), 'lbs/yr');
+            this.estElecTxt.value = this.formatNumber(Math.round(output), 'kWh/year');
+            this.estCO2Txt.value = this.formatNumber(Math.round(co2), 'lbs/yr');
         }
     });
 });

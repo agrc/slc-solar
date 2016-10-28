@@ -204,8 +204,8 @@ require([
 
                 testWidget.onAreasAndLengthsReturn({areas: [value]});
 
-                expect(testWidget.totalAreaTxt.innerHTML).toEqual(expected);
-                expect(testWidget.usableRoofAreaTxt.innerHTML).toEqual(expected);
+                expect(testWidget.totalAreaTxt.value).toEqual(expected);
+                expect(testWidget.usableRoofAreaTxt.value).toEqual(expected);
             });
             it('sets the totalArea property', function () {
                 var value = 1000;
@@ -231,10 +231,10 @@ require([
                 config.ElectricGenerationFactor = 1399;
                 config.CO2SavingsFactor = 1.21;
 
-                expect(testWidget.usableRoofAreaTxt.innerHTML).toEqual('921 sq ft');
-                expect(testWidget.potentialSysSizeTxt.innerHTML).toEqual('15.4 kW');
-                expect(testWidget.estElecTxt.innerHTML).toEqual('21,518 kWh/year');
-                expect(testWidget.estCO2Txt.innerHTML).toEqual('26,036 lbs/yr');
+                expect(testWidget.usableRoofAreaTxt.value).toEqual('921 sq ft');
+                expect(testWidget.potentialSysSizeTxt.value).toEqual('15.4 kW');
+                expect(testWidget.estElecTxt.value).toEqual('21,518 kWh/year');
+                expect(testWidget.estCO2Txt.value).toEqual('26,036 lbs/yr');
             });
         });
         config = AGRCclone;
