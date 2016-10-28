@@ -108,7 +108,7 @@ define([
             this.findAddress = new FindAddress({
                 map: this.map,
                 apiKey: config.apiKey,
-                zoomLevel: 17
+                zoomLevel: 20
             }, this.findAddressDiv);
 
             this.solarOverlayControls = new SolarOverlayControls({
