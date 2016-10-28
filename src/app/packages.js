@@ -18,6 +18,10 @@ require({
             location: './bootstrap',
             main: 'dist/js/bootstrap'
         }, {
+            name: 'bootstrap-slider',
+            location: './seiyria-bootstrap-slider',
+            main: 'dist/bootstrap-slider'
+        }, {
             name: 'jquery',
             location: './jquery/dist',
             main: 'jquery'

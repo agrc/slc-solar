@@ -1,62 +1,72 @@
 <div>
     <div class="padder">
-        <button class="btn" type="button" data-dojo-attach-event="click:hide"><i class="icon-remove"></i></button>
-        <div class="btn-group pull-right" data-toggle="buttons-radio">
-            <button class="btn active" type="button" data-dojo-attach-point='durationBtn'>Duration</button>
-            <button class="btn" type="button" data-dojo-attach-point='intensityBtn'>Intensity</button>
-            <button class="btn" type='button' data-dojo-attach-point="calculationsBtn">Calculations</button>
+        <button class="btn btn-default" type="button" data-dojo-attach-event="click:hide">
+            <span class="glyphicon glyphicon-remove"></span>
+        </button>
+        <div class="btn-group pull-right" data-toggle="buttons">
+            <label class='btn btn-default active' data-dojo-attach-point='durationBtn'>
+                <input type='radio'/> Duration
+            </label>
+            <label class='btn btn-default' data-dojo-attach-point='intensityBtn'>
+                <input type='radio'/> Intensity
+            </label>
+            <label class='btn btn-default' data-dojo-attach-point="calculationsBtn">
+                <input type='radio'/> Calculations
+            </label>
         </div>
         <span class="loader" data-dojo-attach-point='loader'></span>
         <div data-dojo-attach-point="chartDiv"></div>
-        <div data-dojo-attach-point="calculationsDiv" class='form-horizontal'>
-            <div class="control-group">
-                <label class="control-label">Total Selected Area</label>
-                <div class="controls">
-                    <span class='uneditable-input' data-dojo-attach-point="totalAreaTxt"></span>
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">Usable Roof Percentage</label>
-                <div class="controls">
-                    <input type="text" class="slider" data-slider-min="0" data-slider-max="100" 
-                        data-slider-value="100" data-dojo-attach-point="usableSlider">
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">Usable Roof Area</label>
-                <div class="controls">
-                    <span class="uneditable-input" data-dojo-attach-point="usableRoofAreaTxt"></span>
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">Potential System Size</label>
-                <div class="controls">
-                    <span class="uneditable-input" data-dojo-attach-point="potentialSysSizeTxt"></span>
-                    <a href='#' data-toggle='tooltip' 
-                        title='Generic solar panel with an efficiency of 18% outputs 16.7 W per square foot'
-                        class="tooltip-a">Assuming 18% efficiency</a>
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">Estimated Electricity Generated</label>
-                <div class="controls">
-                    <span class="uneditable-input" data-dojo-attach-point="estElecTxt"></span>
-                    <a href='#' data-toggle='tooltip'
-                        title='The average Utah home consumes approximately 800 kWh of electricity per month, or 9,600 kWh/year'
-                        class="tooltip-a">More Info</a>
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">Estimated CO2 Savings</label>
-                <div class="controls">
-                    <span class="uneditable-input" data-dojo-attach-point="estCO2Txt"></span>
-                    <a href='#' data-toggle='tooltip'
-                        title='Rocky Mountain Power estimates 1.21 lbs of C02 per kilowatt hour according to the Green Power Purchase Program'
-                        class="tooltip-a">How is this calculated?</a>
-                </div>
-            </div>
-            <p>Calculate your Solar Cost Savings by using the National Renewable Energy Lab's 
-                <a href="http://www.nrel.gov/rredc/pvwatts/site_specific.html">PW Watts</a> tool.</p>
+        <div data-dojo-attach-point="calculationsDiv">
+            <table>
+                <tr>
+                    <td class='calc-label'>Total Selected Area</td>
+                    <td>
+                        <span class='uneditable-input' data-dojo-attach-point="totalAreaTxt"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class='calc-label'>Usable Roof Percentage</td>
+                    <td>
+                        <input type="text" class="slider" data-slider-min="0" data-slider-max="100"
+                            data-slider-value="100" data-dojo-attach-point="usableSlider">
+                    </td>
+                </tr>
+                <tr>
+                    <td class='calc-label'>Usable Roof Area</td>
+                    <td>
+                        <span class="uneditable-input" data-dojo-attach-point="usableRoofAreaTxt"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class='calc-label'>Potential System Size</td>
+                    <td>
+                        <span class="uneditable-input" data-dojo-attach-point="potentialSysSizeTxt"></span>
+                        <a href='#' data-toggle='tooltip'
+                            title='Generic solar panel with an efficiency of 18% outputs 16.7 W per square foot'
+                            class="tooltip-a">Assuming 18% efficiency</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class='calc-label'>Estimated Electricity Generated</td>
+                    <td>
+                        <span class="uneditable-input" data-dojo-attach-point="estElecTxt"></span>
+                        <a href='#' data-toggle='tooltip'
+                            title='The average Utah home consumes approximately 800 kWh of electricity per month, or 9,600 kWh/year'
+                            class="tooltip-a">More Info</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class='calc-label'>Estimated CO2 Savings</td>
+                    <td>
+                        <span class="uneditable-input" data-dojo-attach-point="estCO2Txt"></span>
+                        <a href='#' data-toggle='tooltip'
+                            title='Rocky Mountain Power estimates 1.21 lbs of C02 per kilowatt hour according to the Green Power Purchase Program'
+                            class="tooltip-a">How is this calculated?</a>
+                    </td>
+                </tr>
+            </table>
+            <p>Calculate your Solar Cost Savings by using the National Renewable Energy Lab's
+                <a href="http://pvwatts.nrel.gov/">PW Watts</a> tool.</p>
         </div>
     </div>
 </div>

@@ -1,6 +1,8 @@
 define([
     'agrc/modules/Formatting',
 
+    'app/config',
+
     'dijit/_TemplatedMixin',
     'dijit/_WidgetBase',
     'dijit/_WidgetsInTemplateMixin',
@@ -23,12 +25,16 @@ define([
 
     'esri/domUtils',
     'esri/request',
+    'esri/SpatialReference',
     'esri/tasks/AreasAndLengthsParameters',
     'esri/tasks/GeometryService',
+    'esri/tasks/ProjectParameters',
 
     'dojox/charting/axis2d/Default'
 ], function (
     Formatting,
+
+    config,
 
     _TemplatedMixin,
     _WidgetBase,
@@ -52,8 +58,10 @@ define([
 
     domUtils,
     esriRequest,
+    SpatialReference,
     AreasAndLengthsParameters,
-    GeometryService
+    GeometryService,
+    ProjectParameters
 ) {
     // summary:
     //      Handles retrieving and displaying the data in the popup.
@@ -93,13 +101,10 @@ define([
         geometry: null,
 
 
-        constructor: function () {
-            console.log(this.declaredClass + '::constructor', arguments);
-        },
         postCreate: function () {
             // summary:
             //      dom is ready
-            console.log(this.declaredClass + '::postCreate', arguments);
+            console.log('app/Popup:postCreate', arguments);
 
             this.chart = new Chart(this.chartDiv)
                 .addPlot('default', {
@@ -185,13 +190,13 @@ define([
         resize: function () {
             // summary:
             //      resets the height of the div
-            console.log(this.declaredClass + '::resize', arguments);
+            console.log('app/Popup:resize', arguments);
 
             domStyle.set(this.domNode, 'height', (domGeom.getMarginBox(win.body()).h - 41) + 'px');
         },
         wireEvents: function () {
             // param: type or return: type
-            console.log(this.declaredClass + '::wireEvents', arguments);
+            console.log('app/Popup:wireEvents', arguments);
 
             var that = this;
 
@@ -207,7 +212,7 @@ define([
                 })
             );
 
-            this.geoService = new GeometryService(AGRC.urls.geometry);
+            this.geoService = new GeometryService(config.urls.geometry);
             $(this.usableSlider).on('slide', function (evt) {
                 that.updateCalculationValues(evt.value);
             });
@@ -216,7 +221,17 @@ define([
             // summary:
             //      description
             // geometry: Polygon
-            console.log(this.declaredClass + '::setData', arguments);
+            console.log('app/Popup:setData', arguments);
+
+            this.project(geometry);
+        },
+        getArea: function (geometries) {
+            // summary:
+            //      gets the are of the passed in geometry
+            // geometries: Geometry[]
+            console.log('app/Popup:getArea', arguments);
+
+            var geometry = geometries[0];
 
             var params = new AreasAndLengthsParameters();
 
@@ -228,9 +243,7 @@ define([
             params.lengthUnit = GeometryService.UNIT_FOOT;
             params.polygons = [geometry];
 
-            this.geoService.areasAndLengths(params, lang.hitch(this, this.onAreasAndLengthsReturn), function (err) {
-                window.alert('There was an error with the geometry service', err.message);
-            });
+            this.geoService.areasAndLengths(params, this.onAreasAndLengthsReturn.bind(this), this.onGeoError.bind(this));
 
             if (!this.graphicClickHandler) {
                 this.graphicClickHandler = this.map.graphics.on('click', lang.hitch(this, this.show));
@@ -238,14 +251,34 @@ define([
 
             this.geometry = geometry;
         },
+        onGeoError: function (err) {
+            // summary:
+            //      error in geometry service
+            // err: Error
+            console.log('app/Popup:onGeoError', arguments);
+
+            window.alert('There was an error with the geometry service', err.message);
+        },
+        project: function (geometry) {
+            // summary:
+            //      projects the polygon from web mercator to utm
+            // geometry: Polygon
+            console.log('app/Popup:project', arguments);
+
+            var params = new ProjectParameters();
+            params.geometries = [geometry];
+            params.outSR = new SpatialReference({wkid: 26912});
+            params.transformation = 1515;
+            return this.geoService.project(params, this.getArea.bind(this), this.onGeoError.bind(this));
+        },
         sendDataToSOE: function (geometry) {
             // summary:
             //      sends the data to the soe and wires callbacks
             // geometry: Polygon
-            console.log(this.declaredClass + '::sendDataToSOE', arguments);
+            console.log('app/Popup:setDataToSOE', arguments);
 
             esriRequest({
-                url: AGRC.urls.soe,
+                url: config.urls.soe,
                 content: {
                     f: 'json',
                     geometry: this.formatGeometry(geometry),
@@ -263,7 +296,7 @@ define([
             //      flattens all coordinates into a single number array
             //      that suitable for the soe input
             // geometry: Polygon
-            console.log(this.declaredClass + '::formatGeometry', arguments);
+            console.log('app/Popup:formatGeometry', arguments);
 
             var a = [];
 
@@ -277,7 +310,7 @@ define([
             // summary:
             //      callback for soe request
             // json: Object
-            console.log(this.declaredClass + '::onSOEReturn', arguments);
+            console.log('app/Popup:onSOEReturn', arguments);
 
             this.durationData = this.formatDataForChart(json.solarPotential.duration, 1);
             this.intensityData = this.formatDataForChart(json.solarPotential.radiation, 1000);
@@ -299,7 +332,7 @@ define([
             //      The new data
             // title: String
             //      The new chart title
-            console.log(this.declaredClass + '::renderChart', arguments);
+            console.log('app/Popup:renderChart', arguments);
 
             domUtils.show(this.chartDiv);
             domUtils.hide(this.calculationsDiv);
@@ -320,7 +353,7 @@ define([
             // summary:
             //      Error callback
             // err: Error Object
-            console.log(this.declaredClass + '::onSOEError', arguments);
+            console.log('app/Popup:onSOEError', arguments);
 
             console.error(err);
 
@@ -332,7 +365,7 @@ define([
             //      flattens the data into an array
             // data: Object
             // factor: Number
-            console.log(this.declaredClass + '::formatDataForChart', arguments);
+            console.log('app/Popup:formatDataForChart', arguments);
 
             var array = [];
             for (var prop in data) {
@@ -346,7 +379,7 @@ define([
         showCalculations: function () {
             // summary:
             //      shows the calculations div
-            console.log(this.declaredClass + '::showCalculations', arguments);
+            console.log('app/Popup:showCalculations', arguments);
 
             domUtils.hide(this.chartDiv);
             domUtils.show(this.calculationsDiv);
@@ -362,17 +395,21 @@ define([
                 this.sliderInit = true;
             }
         },
-        show: function () {
+        show: function (event) {
             // summary:
             //      description
-            console.log(this.declaredClass + '::show', arguments);
+            console.log('app/Popup:show', arguments);
+
+            if (lang.getObject('event.graphic.geometry.type') === 'polyline') {
+                return event;
+            }
 
             this.showAni.play();
         },
         hide: function () {
             // summary:
             //      description
-            console.log(this.declaredClass + '::hide', arguments);
+            console.log('app/Popup:hide', arguments);
 
             this.hideAni.play();
         },
@@ -380,12 +417,12 @@ define([
             // summary:
             //      callback for areasAndLengths geometry service
             // results: {areas: Number[], lengths: Number[]}
-            console.log(this.declaredClass + '::onAreasAndLengthsReturn', arguments);
+            console.log('app/Popup:onAreasAndLengthsReturn', arguments);
 
             var area = Math.round(results.areas[0], 10);
             var areaTxt = this.formatNumber(area, 'sq ft');
 
-            if (area > AGRC.maxSqFt) {
+            if (area > config.maxSqFt) {
                 window.alert('Your area is: ' + area + ' square feet. Areas more than 10,000 sqft are not allowed. Try drawing a smaller area.');
                 this.hide();
             } else {
@@ -401,7 +438,7 @@ define([
             //      formats a number suitable for a text box
             // number: Number
             // type: String (sqft | )
-            console.log(this.declaredClass + '::formatNumber', arguments);
+            console.log('app/Popup:formatNumber', arguments);
 
             return Formatting.addCommas(number) + ' ' + type;
         },
@@ -411,12 +448,12 @@ define([
             //      based upon the usable percentage
             // usable: Number
             //      percentage of usable roof area
-            console.log(this.declaredClass + '::updateCalculationValues', arguments);
+            console.log('app/Popup:updateCalculationValues', arguments);
 
             var sqft = this.totalArea * (usable / 100.0);
-            var size = sqft * AGRC.PVEfficiency;
-            var output = size * AGRC.ElectricGenerationFactor;
-            var co2 = output * AGRC.CO2SavingsFactor;
+            var size = sqft * config.PVEfficiency;
+            var output = size * config.ElectricGenerationFactor;
+            var co2 = output * config.CO2SavingsFactor;
 
             this.usableRoofAreaTxt.innerHTML = this.formatNumber(Math.round(sqft), 'sq ft');
             this.potentialSysSizeTxt.innerHTML =

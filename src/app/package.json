@@ -1,8 +1,8 @@
 {
-    "name": "Atlas.app",
-    "version": "3.1.1",
+    "name": "SLCSolar.app",
+    "version": "1.0.0",
     "main": "main",
-    "description": "AGRC Boilerplate",
-    "homepage": "https://github.com/agrc/AGRCJavaScriptProjectBoilerPlate",
+    "description": "SLC Solar Map",
+    "homepage": "https://github.com/agrc/slc-solar",
     "dojoBuild": "app.profile.js"
 }

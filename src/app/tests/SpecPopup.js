@@ -1,4 +1,5 @@
 require([
+    'app/config',
     'app/Popup',
 
     'dojo/dom-construct',
@@ -9,9 +10,8 @@ require([
     'dojo/_base/window',
 
     'stubmodule'
-],
-
-function (
+], function (
+    config,
     Popup,
 
     domConstruct,
@@ -40,13 +40,13 @@ function (
                 on: function () {}
             }
         };
-        var AGRCclone = lang.clone(AGRC);
+        var AGRCclone = lang.clone(config);
         beforeEach(function () {
             testWidget = new Popup({
                 map: map
             }, domConstruct.create('div', {}, win.body()));
             testWidget.startup();
-            AGRC = AGRCclone;
+            config = AGRCclone;
         });
         afterEach(function () {
             destroy(testWidget);
@@ -61,36 +61,33 @@ function (
         });
         describe('setData', function () {
             it('send data to geometry service', function () {
-                spyOn(testWidget.geoService, 'areasAndLengths');
+                spyOn(testWidget.geoService, 'project');
 
                 testWidget.setData(geometry);
 
-                expect(testWidget.geoService.areasAndLengths).toHaveBeenCalled();
-            });
-            it('sets the geometry property', function () {
-                testWidget.setData(geometry);
-
-                expect(testWidget.geometry).toEqual(geometry);
+                expect(testWidget.geoService.project).toHaveBeenCalled();
             });
         });
         describe('sendDataToSOE', function () {
             var requestSpy;
-            var StubbedPopup;
             var testWidget2;
-            beforeEach(function () {
-                requestSpy = jasmine.createSpy('request').andReturn({then: function () {}});
-                StubbedPopup = stubmodule('app/Popup', {
+            beforeEach(function (done) {
+                requestSpy = jasmine.createSpy('request').and.returnValue({then: function () {}});
+                stubmodule('app/Popup', {
                     'esri/request': requestSpy
+                }).then(function (StubbedPopup) {
+                    testWidget2 = new StubbedPopup({map: map});
+                    testWidget2.startup();
+
+                    done();
                 });
 
-                testWidget2 = new StubbedPopup({map: map});
-                testWidget2.startup();
             });
             it('send the geometry to the service', function () {
                 testWidget2.sendDataToSOE(geometry);
 
                 expect(requestSpy).toHaveBeenCalledWith({
-                    url: AGRC.urls.soe,
+                    url: config.urls.soe,
                     content: {
                         f: 'json',
                         geometry: numbers,
@@ -186,14 +183,14 @@ function (
             });
             it('check the max area', function () {
                 testWidget.onAreasAndLengthsReturn({
-                    areas: [AGRC.maxSqFt + 1],
+                    areas: [config.maxSqFt + 1],
                     lengths: [10]
                 });
 
                 expect(testWidget.sendDataToSOE).not.toHaveBeenCalled();
 
                 testWidget.onAreasAndLengthsReturn({
-                    areas: [AGRC.maxSqFt - 1],
+                    areas: [config.maxSqFt - 1],
                     lengths: [10]
                 });
 
@@ -228,9 +225,9 @@ function (
 
                 // overriding these values to make the tests less brittle if the
                 // configs in the production app are changed in the future...
-                AGRC.PVEfficiency = 0.0167;
-                AGRC.ElectricGenerationFactor = 1399;
-                AGRC.CO2SavingsFactor = 1.21;
+                config.PVEfficiency = 0.0167;
+                config.ElectricGenerationFactor = 1399;
+                config.CO2SavingsFactor = 1.21;
 
                 expect(testWidget.usableRoofAreaTxt.innerHTML).toEqual('921 sq ft');
                 expect(testWidget.potentialSysSizeTxt.innerHTML).toEqual('15.4 kW');
@@ -238,6 +235,6 @@ function (
                 expect(testWidget.estCO2Txt.innerHTML).toEqual('26,036 lbs/yr');
             });
         });
-        AGRC = AGRCclone;
+        config = AGRCclone;
     });
 });

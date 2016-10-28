@@ -1,4 +1,6 @@
 define([
+    'app/config',
+
     'dijit/_TemplatedMixin',
     'dijit/_WidgetBase',
     'dijit/_WidgetsInTemplateMixin',
@@ -11,8 +13,12 @@ define([
     'dojo/_base/lang',
 
     'esri/layers/ArcGISDynamicMapServiceLayer',
-    'esri/layers/ArcGISTiledMapServiceLayer'
+    'esri/layers/ArcGISTiledMapServiceLayer',
+
+    'bootstrap'
 ], function (
+    config,
+
     _TemplatedMixin,
     _WidgetBase,
     _WidgetsInTemplateMixin,
@@ -29,7 +35,7 @@ define([
 ) {
     // summary:
     //      Contains the controls for toggling the solar layers as well as controlling their transparency.
-    return declare('app/SolarOverlayControls', [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+    return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         widgetsInTemplate: false,
         templateString: template,
         baseClass: 'solar-overlay-controls',
@@ -71,15 +77,15 @@ define([
 
             $(this.slider).slider();
 
-            this.durationLayer = makeLayer(AGRC.urls.duration, ArcGISTiledMapServiceLayer);
-            this.intensityLayer = makeLayer(AGRC.urls.radiation, ArcGISTiledMapServiceLayer);
-            this.solarByZipLayer = makeLayer(AGRC.urls.solarByZip, ArcGISDynamicMapServiceLayer);
+            this.durationLayer = makeLayer(config.urls.duration, ArcGISTiledMapServiceLayer);
+            this.intensityLayer = makeLayer(config.urls.radiation, ArcGISTiledMapServiceLayer);
+            this.solarByZipLayer = makeLayer(config.urls.solarByZip, ArcGISDynamicMapServiceLayer);
             this.solarByZipLayer.hide();
             this.map.addLoaderToLayer(this.solarByZipLayer);
 
             this.wireEvents();
 
-            query('i', this.domNode).forEach(function (node) {
+            query('span.glyphicon-question-sign', this.domNode).forEach(function (node) {
                 $(node).popover({
                     content: legendHTML.replace('{{src}}', node.getAttribute('data-image')),
                     html: true,
@@ -152,7 +158,7 @@ define([
 
             if (this.showOverlay) {
                 var updateLyr = function (lyr, rb) {
-                    return (rb.checked) ? lyr.show() : lyr.hide();  // this is cool code. You have to admit :)
+                    return (rb.checked) ? lyr.show() : lyr.hide();
                 };
 
                 updateLyr(this.durationLayer, this.durationRadioBtn);

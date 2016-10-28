@@ -7,16 +7,16 @@ deploy/
 dist/
 node_modules/
 secrets.json
-src/agrc/
 src/agrc-jasmine-matchers/
+src/agrc/
 src/app/**/*.css
 src/bootstrap/
 src/components-jasmine/
 src/dgauges/
 src/dgrid/
 src/dijit/
-src/dojo/
 src/dojo-themes/
+src/dojo/
 src/dojox/
 src/dstore/
 src/esri/
@@ -31,6 +31,7 @@ src/moment/
 src/mustache/
 src/proj4/
 src/put-selector/
+src/seiyria-bootstrap-slider/
 src/spin.js/
 src/spinjs/
 src/stubmodule/

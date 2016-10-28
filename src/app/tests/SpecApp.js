@@ -1,35 +1,29 @@
 require([
     'app/App',
+    'app/config',
 
     'dojo/dom-class',
     'dojo/dom-construct',
     'dojo/text!app/tests/data/PolygonGeometry.json',
-    'dojo/_base/window',
 
     'esri/map',
-    'esri/toolbars/draw',
-
-    'https://raw.github.com/stdavis/StubModule/master/StubModule.js'
-],
-
-function (
+    'esri/toolbars/draw'
+], function (
     App,
+    config,
 
     domClass,
     domConstruct,
     polygonJSON,
-    win,
 
     Map,
-    Draw,
-
-    stubModule
+    Draw
 ) {
     describe('app/App', function () {
         var testWidget;
         var geometry;
         beforeEach(function () {
-            testWidget = new App({}, domConstruct.create('div', {}, win.body()));
+            testWidget = new App({}, domConstruct.create('div', {}, document.body));
             geometry = JSON.parse(polygonJSON);
             geometry.toJson = function () {};
         });
@@ -47,35 +41,6 @@ function (
             });
         });
         describe('postCreate', function () {
-            it('inits the find Address widget', function () {
-                var findAddressConstructor = jasmine.createSpy('FindAddress');
-                var Stubbed = stubModule('app/App', {
-                    'agrc/widgets/locate/FindAddress': findAddressConstructor
-                });
-                var testWidget2 = new Stubbed();
-
-                expect(findAddressConstructor).toHaveBeenCalledWith({
-                    map: testWidget2.map,
-                    apiKey: AGRC.apiKey
-                }, testWidget2.findAddressDiv);
-                expect(testWidget2.findAddress).toBeDefined();
-
-                testWidget2.destroy();
-            });
-            xit('inits the solar overlay controls widget', function () {
-                var solarOverlayControlsConstructor = jasmine.createSpy('solarOverlayControlsConstructor');
-                var Stubbed = stubModule('app/App', {
-                    'app/SolarOverlayControls': solarOverlayControlsConstructor
-                });
-                var testWidget2 = new Stubbed();
-
-                expect(solarOverlayControlsConstructor).toHaveBeenCalledWith({
-                    map: testWidget2.map
-                }, testWidget2.solarOverlayControlsDiv);
-                expect(testWidget2.solarOverlayControls).toBeDefined();
-
-                testWidget2.destroy();
-            });
             it('calls wireEvents', function () {
                 spyOn(testWidget, 'wireEvents');
 
@@ -108,18 +73,12 @@ function (
                 expect(testWidget.onDrawClick).toHaveBeenCalled();
             });
             it('wires the onDrawEnd event', function () {
-                waitsFor(function () {
-                    return testWidget.map.loaded;
-                });
+                spyOn(testWidget, 'onDrawEnd');
 
-                runs(function () {
-                    spyOn(testWidget, 'onDrawEnd');
+                testWidget.wireEvents();
+                testWidget.draw.onDrawEnd(geometry);
 
-                    testWidget.wireEvents();
-                    testWidget.draw.onDrawEnd(geometry);
-
-                    expect(testWidget.onDrawEnd).toHaveBeenCalled();
-                });
+                expect(testWidget.onDrawEnd).toHaveBeenCalled();
             });
             it('wires the clear button', function () {
                 spyOn(testWidget, 'onClearDrawing');
@@ -157,47 +116,29 @@ function (
         });
         describe('onDrawEnd', function () {
             it('adds the graphic to the map', function () {
-                waitsFor(function () {
-                    return testWidget.map.loaded;
-                });
+                spyOn(testWidget.map.graphics, 'add');
 
-                runs(function () {
-                    spyOn(testWidget.map.graphics, 'add');
+                testWidget.onDrawEnd(geometry);
 
-                    testWidget.onDrawEnd(geometry);
-
-                    expect(testWidget.map.graphics.add).toHaveBeenCalled();
-                });
+                expect(testWidget.map.graphics.add).toHaveBeenCalled();
             });
             it('disabled the draw toolbar and button', function () {
-                waitsFor(function () {
-                    return testWidget.map.loaded;
-                });
+                testWidget.drawBtn.click();
+                spyOn(testWidget.draw, 'deactivate');
 
-                runs(function () {
-                    testWidget.drawBtn.click();
-                    spyOn(testWidget.draw, 'deactivate');
+                testWidget.onDrawEnd(geometry);
 
-                    testWidget.onDrawEnd(geometry);
-
-                    expect(testWidget.draw.deactivate).toHaveBeenCalled();
-                    expect(domClass.contains(testWidget.drawBtn, 'active')).toBe(false);
-                });
+                expect(testWidget.draw.deactivate).toHaveBeenCalled();
+                expect(domClass.contains(testWidget.drawBtn, 'active')).toBe(false);
             });
         });
         describe('onClearDrawing', function () {
             it('clears the map graphics', function () {
-                waitsFor(function () {
-                    return testWidget.map.loaded;
-                });
+                spyOn(testWidget.map.graphics, 'clear');
 
-                runs(function () {
-                    spyOn(testWidget.map.graphics, 'clear');
+                testWidget.onClearDrawing();
 
-                    testWidget.onClearDrawing();
-
-                    expect(testWidget.map.graphics.clear).toHaveBeenCalled();
-                });
+                expect(testWidget.map.graphics.clear).toHaveBeenCalled();
             });
         });
     });

@@ -1,8 +1,12 @@
 define([
+    'dojo/has',
+    'dojo/request/xhr'
 ], function (
+    has,
+    xhr
 ) {
     var slcSolarServer = 'http://maps.slcgov.com/slcisolar/rest/services/';
-    return {
+    var config = {
         // errorLogger: ijit.modules.ErrorLogger
         errorLogger: null,
 
@@ -14,21 +18,16 @@ define([
         //      The version number.
         version: '0.6.0',
 
-        // apiKey: String
-        //      api.mapserv.utah.gov key
-        // apiKey: 'AGRC-63E1FF17767822', // localhost
-        // apiKey: 'AGRC-1B07B497348512', // mapserv.utah.gov/*
-        apiKey: 'AGRC-B256ADB5500988', // 168.177.223.158/*
+        apiKey: null,
 
         // drawSymbolColor: Number[]
         //      The color of the polygon after the drawing is complete
         drawSymbolColor: [255, 255, 0],
 
         urls: {
-            duration: slcSolarServer + 'solar/SLCO_SolarDuration/MapServer',
-            radiation: slcSolarServer + 'solar/SLCO_SolarRadiation/MapServer',
+            duration: slcSolarServer + 'solar/SLCO_SolarDuration_EPSG_3857/MapServer',
+            radiation: slcSolarServer + 'solar/SLCO_SolarRadiation_EPSG_3857/MapServer',
             soe: slcSolarServer + 'solar/SLCO_SolarPts/MapServer/exts/SolarCalculatorSoe/CalculateFor?',
-            basemap: '??',
             geometry: slcSolarServer + 'Utilities/Geometry/GeometryServer',
             solarByZip: slcSolarServer + 'solar/solarByZipCode/MapServer'
         },
@@ -50,4 +49,27 @@ define([
         /** PV panel production rate for given efficiency */
         PVEfficiency: 0.0167 //18% panels at 16.7 W per sq foot
     };
+
+    if (has('agrc-build') === 'prod') {
+        // www.solarsimplified.org
+        config.apiKey = '??';
+        config.quadWord = '??';
+    } else if (has('agrc-build') === 'stage') {
+        // test.mapserv.utah.gov
+        config.quadWord = 'opera-event-little-pinball';
+        config.apiKey = 'AGRC-AC122FA9671436';
+    } else {
+        // localhost
+        xhr(require.baseUrl + 'secrets.json', {
+            handleAs: 'json',
+            sync: true
+        }).then(function (secrets) {
+            config.quadWord = secrets.quadWord;
+            config.apiKey = secrets.apiKey;
+        }, function () {
+            throw 'Error getting secrets!';
+        });
+    }
+
+    return config;
 });

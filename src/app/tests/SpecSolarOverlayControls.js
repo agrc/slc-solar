@@ -35,7 +35,7 @@ function (
         });
         describe('postCreate', function () {
             it('adds the layers to the map', function () {
-                expect(map.addLayer.callCount).toBe(3);
+                expect(map.addLayer.calls.count()).toBe(3);
                 expect(map.addLayer).toHaveBeenCalledWith(testWidget.durationLayer);
             });
         });
@@ -57,7 +57,7 @@ function (
                 testWidget.intensityRadioBtn.click();
                 testWidget.durationRadioBtn.click();
 
-                expect(testWidget.onLayerToggle.callCount).toBe(2);
+                expect(testWidget.onLayerToggle.calls.count()).toBe(2);
 
                 $(testWidget.slider).slider().trigger('slide');
 

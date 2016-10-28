@@ -2,6 +2,7 @@ define([
     'agrc/widgets/locate/FindAddress',
     'agrc/widgets/map/BaseMap',
 
+    'app/config',
     'app/Popup',
     'app/SolarOverlayControls',
 
@@ -24,13 +25,16 @@ define([
     'esri/symbols/SimpleFillSymbol',
     'esri/toolbars/draw',
 
-    'bootstrap/js/bootstrap',
-    'dijit/TitlePane',
-    'slider/js/bootstrap-slider'
+    'layer-selector/LayerSelector',
+
+    'bootstrap',
+    'bootstrap-slider',
+    'dijit/TitlePane'
 ], function (
     FindAddress,
     BaseMap,
 
+    config,
     Popup,
     SolarOverlayControls,
 
@@ -51,7 +55,9 @@ define([
     Extent,
     Graphic,
     SimpleFillSymbol,
-    Draw
+    Draw,
+
+    LayerSelector
 ) {
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         // summary:
@@ -82,10 +88,9 @@ define([
             //      first function to fire after page loads
             console.log('app/App:constructor', arguments);
 
-            // AGRC.errorLogger = new ErrorLogger({appName: 'SolarMapWidget'});
-            AGRC.app = this;
+            config.app = this;
 
-            this.symbol = new SimpleFillSymbol().setColor(new Color(AGRC.drawSymbolColor.concat([0.25])));
+            this.symbol = new SimpleFillSymbol().setColor(new Color(config.drawSymbolColor.concat([0.25])));
         },
         postCreate: function () {
             // summary:
@@ -102,7 +107,8 @@ define([
             });
             this.findAddress = new FindAddress({
                 map: this.map,
-                apiKey: AGRC.apiKey
+                apiKey: config.apiKey,
+                zoomLevel: 17
             }, this.findAddressDiv);
 
             this.solarOverlayControls = new SolarOverlayControls({
@@ -120,18 +126,29 @@ define([
             console.log('app/App:initMap', arguments);
 
             this.map = new BaseMap(this.mapDiv, {
-                defaultBaseMap: 'Hybrid',
+                useDefaultBaseMap: false,
                 extent: new Extent({
-                    'type': 'extent',
-                    'xmin': 406719.3295027474,
-                    'ymin': 4486834.867579307,
-                    'xmax': 435956.49282178795,
-                    'ymax': 4516607.090096343,
-                    'spatialReference': {
-                        'wkid': 26912
+                    // xmax: -12402133.995934062,
+                    // xmin: -12512203.316664688,
+                    // ymax: 4987492.188899369,
+                    // ymin: 4930164.417685502,
+                    xmin: -12455146.508744448,
+                    ymin: 4964198.303111609,
+                    xmax: -12454994.231852163,
+                    ymax: 4964310.2714147605,
+                    spatialReference: {
+                        wkid: 3857
                     }
-                })
+                }),
+                showAttribution: false
             });
+
+            var layerSelector = new LayerSelector({
+                map: this.map,
+                quadWord: config.quadWord,
+                baseLayers: ['Hybrid']
+            });
+            layerSelector.startup();
 
             this.draw = new Draw(this.map);
         },

@@ -9,35 +9,27 @@
                 margin: 20px;
             }
         </style>
+        <script src='../../dojo/dojo.js'></script>
+        <script src='../packages.js'></script>
+        <script src='../../jquery/dist/jquery.js'></script>
         <script>
-            dojoConfig = {
-                packagePaths: {
-                    '/projects/SolarMapWidget/src/': [
-                        'app',
-                        'agrc',
-                        'ijit',
-                        'bootstrap',
-                        'slider'
-                    ]
-                }
-            };
-        </script>
-        <script src="http://serverapi.arcgisonline.com/jsapi/arcgis/3.4"></script>
-        <script>
-            require([
+            require({
+                baseUrl: '../../'
+            }, [
                 'app/Popup',
                 'dojo/text!app/tests/data/CalculateForReturn.json',
 
-                'bootstrap/js/jquery-1.9.1',
-                'bootstrap/js/bootstrap',
+                'bootstrap',
                 'dojo/domReady!'
             ], function (
                 Popup,
                 ReturnJSON
                 ) {
-                popup = new Popup({}, 'testDiv');
+                popup = new Popup({
+                    map: {container: {}}
+                }, 'testDiv');
 
-                popup.onSEOReturn(JSON.parse(ReturnJSON));
+                popup.onSOEReturn(JSON.parse(ReturnJSON));
             });
         </script>
     </head>
