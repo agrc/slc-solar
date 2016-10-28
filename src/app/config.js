@@ -37,13 +37,13 @@ define([
         //      to the soe
         maxSqFt: 10000,
 
-        // configs copied from old site...
-        /** Electric Generation Factor*/
-        ElectricGenerationFactor: 1399, //for SLC area 1kw per year = 1399 kWh
-        /** CO2 output per kWh */
-        CO2SavingsFactor: 1.21, //1.21 lbs of C02 per kilowatt hour basedon Rocky Mountain Power (Utah)
-        /** PV panel production rate for given efficiency */
-        PVEfficiency: 0.0167 //18% panels at 16.7 W per sq foot
+        // configs from Utah Clean Energy
+        // Electric Generation Factor
+        ElectricGenerationFactor: 1399,
+        // CO2 output per kWh
+        CO2SavingsFactor: 1.85,
+        // PV panel production rate for given efficiency
+        PVEfficiency: 0.01389
     };
 
     if (has('agrc-build') === 'prod') {
