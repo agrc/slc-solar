@@ -1,6 +1,6 @@
 {
     "name": "SLCSolar.app",
-    "version": "2.0.0-0",
+    "version": "2.0.0-1",
     "main": "main",
     "description": "SLC Solar Map",
     "homepage": "https://github.com/agrc/slc-solar",
