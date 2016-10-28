@@ -232,9 +232,9 @@ require([
                 config.CO2SavingsFactor = 1.21;
 
                 expect(testWidget.usableRoofAreaTxt.value).toEqual('921 sq ft');
-                expect(testWidget.potentialSysSizeTxt.value).toEqual('15.4 kW');
-                expect(testWidget.estElecTxt.value).toEqual('21,518 kWh/year');
-                expect(testWidget.estCO2Txt.value).toEqual('26,036 lbs/yr');
+                expect(testWidget.potentialSysSizeTxt.value).toEqual('12.8 kW');
+                expect(testWidget.estElecTxt.value).toEqual('17,897 kWh/year');
+                expect(testWidget.estCO2Txt.value).toEqual('33,109 lbs/yr');
             });
         });
         config = AGRCclone;
