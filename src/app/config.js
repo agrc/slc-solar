@@ -48,8 +48,8 @@ define([
 
     if (has('agrc-build') === 'prod') {
         // www.solarsimplified.org
-        config.apiKey = '??';
-        config.quadWord = '??';
+        config.quadWord = 'short-eddie-andrea-betty';
+        config.apiKey = 'AGRC-17BAFE9E795504';
     } else if (has('agrc-build') === 'stage') {
         // test.mapserv.utah.gov
         config.quadWord = 'opera-event-little-pinball';
