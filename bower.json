@@ -1,6 +1,6 @@
 {
   "name": "slc-solar",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "dependencies": {
     "agrc": "agrc-widgets#5.0.1",
     "agrc-jasmine-matchers": "~0.1.0",

@@ -1,6 +1,6 @@
 {
   "name": "slc-solar",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "widget for embedding into http://www.solarsimplified.org/solar-resources/solar-map",
   "homepage": "http://www.solarsimplified.org/solar-resources/solar-map",
   "repository": {
