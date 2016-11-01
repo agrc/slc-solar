@@ -144,6 +144,7 @@ define([
                 }),
                 showAttribution: false
             });
+            this.map.disableScrollWheelZoom();
 
             var layerSelector = new LayerSelector({
                 map: this.map,

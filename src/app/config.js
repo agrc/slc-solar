@@ -47,9 +47,9 @@ define([
     };
 
     if (has('agrc-build') === 'prod') {
-        // www.solarsimplified.org
+        // 63.237.77.61
         config.quadWord = 'short-eddie-andrea-betty';
-        config.apiKey = 'AGRC-17BAFE9E795504';
+        config.apiKey = 'AGRC-83034636690133';
     } else if (has('agrc-build') === 'stage') {
         // test.mapserv.utah.gov
         config.quadWord = 'opera-event-little-pinball';
